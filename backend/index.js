@@ -1,12 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-
+import { configDotenv } from 'dotenv';
+configDotenv();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb+srv://lokesh:Lokesh70@cluster0.jan7vci.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect(process.env.DB)
 const dataSchema = new mongoose.Schema({
     intensity: Number,
     likelihood: Number,
