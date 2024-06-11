@@ -30,21 +30,29 @@ app.post('/api/post/data', async (req, res) => {
         res.status(201).json(savedData)
     } catch (error) {
         console.log("error", error)
-        res.status(400).json({message:"Errir while saving the data"})
+        res.status(500).json({message:"Errir while saving the data"})
     }
 })
 app.get('/api/data', async (req, res) => {
     try {
-        const { year, topic, sector, region } = req.query;
-        const query = {};
-        if (year) query.year = year;
-        if (topic) query.topics = topic;
-        if (sector) query.sector = sector;
-        if (region) query.region = region;
-        const data = await DataModel.find(query);
+        const filterFields = [
+            'start_year','region', 'city', 'intensity','relevance','topics','likelihood','country'
+        ];
+        let filter = {};
+        filterFields.forEach(field => {
+            if(req.query[field]){
+                if(field ===topics){
+                 filter[field] = {$in:req.query[field].split(',')}
+                }
+                else{
+                    filter[field] = req.query[field]
+                }
+            }   
+        });
+        const data = await DataModel.find(filter);
         res.json(data);
     } catch (error) {
-        res.status(400).json({message:"Error while importing data"})
+        res.status(500).json({message:"Error while importing data"})
         
     }
 
