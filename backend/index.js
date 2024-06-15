@@ -33,30 +33,39 @@ app.post('/api/post/data', async (req, res) => {
         res.status(500).json({message:"Errir while saving the data"})
     }
 })
+
 app.get('/api/data', async (req, res) => {
     try {
-        const filterFields = [
-            'start_year','region', 'city', 'intensity','relevance','topics','likelihood','country'
-        ];
-        let filter = {};
-        filterFields.forEach(field => {
-            if(req.query[field]){
-                if(field ===topics){
-                 filter[field] = {$in:req.query[field].split(',')}
-                }
-                else{
-                    filter[field] = req.query[field]
-                }
-            }   
-        });
-        const data = await DataModel.find(filter);
-        res.json(data);
+      const data = await DataModel.find({});
+      res.json(data);
     } catch (error) {
-        res.status(500).json({message:"Error while importing data"})
-        
+      res.status(500).json({ message: error.message });
     }
+  });
+// app.get('/api/data', async (req, res) => {
+//     try {
+//         const filterFields = [
+//             'start_year','region', 'city', 'intensity','relevance','topics','likelihood','country'
+//         ];
+//         let filter = {};
+//         filterFields.forEach(field => {
+//             if(req.query[field]){
+//                 if(field === 'topics'){
+//                  filter[field] = {$in:req.query[field].split(',')}
+//                 }
+//                 else{
+//                     filter[field] = req.query[field]
+//                 }
+//             }   
+//         });
+//         const data = await DataModel.find(filter);
+//         res.json(data);
+//     } catch (error) {
+//         res.status(500).json({message:"Error while importing data"})
+        
+//     }
 
-})
+// })
 app.listen(4000, () => {
     console.log("connected to server")
 })
